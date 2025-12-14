@@ -2,8 +2,6 @@
 
 **AetherFM** is a lightweight, modern file manager built entirely with **Pure GTK+ 3.0**. It is designed to be a fast, dependency-free alternative to Thunar, mimicking its core functionality and aesthetic without requiring the full Xfce desktop environment libraries.
 
-![AetherFM](https://via.placeholder.com/800x600?text=AetherFM+Screenshot)
-
 ## Features
 
 - **Pure GTK+**: Built with standard GTK+ 3.0 and GLib, ensuring broad compatibility and minimal dependencies.
