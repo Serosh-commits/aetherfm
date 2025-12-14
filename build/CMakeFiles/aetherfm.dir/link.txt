@@ -1,0 +1,1 @@
+/usr/bin/cc -Wl,--dependency-file=CMakeFiles/aetherfm.dir/link.d CMakeFiles/aetherfm.dir/src/main.c.o CMakeFiles/aetherfm.dir/src/window.c.o -o aetherfm  -lgtk-3 -lgdk-3 -lz -lpangocairo-1.0 -lcairo-gobject -lgdk_pixbuf-2.0 -latk-1.0 -lpango-1.0 -lcairo -lharfbuzz -lgio-2.0 -lgobject-2.0 -lglib-2.0

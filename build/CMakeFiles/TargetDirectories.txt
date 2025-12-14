@@ -1,0 +1,3 @@
+/home/serosh/projects/NeoThunar/build/CMakeFiles/aetherfm.dir
+/home/serosh/projects/NeoThunar/build/CMakeFiles/edit_cache.dir
+/home/serosh/projects/NeoThunar/build/CMakeFiles/rebuild_cache.dir
