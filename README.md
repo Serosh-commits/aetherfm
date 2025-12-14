@@ -9,12 +9,6 @@
 - **Pure GTK+**: Built with standard GTK+ 3.0 and GLib, ensuring broad compatibility and minimal dependencies.
 - **Fast Navigation**: Double-click to enter directories, use the "Up" button, or type paths directly.
 - **Places Sidebar**: Quick access to your Home directory, file system root, and other mounted drives.
-- **File Operations**:
-  - **Create New**: Create new folders and files instantly.
-  - **Open Files**: Launch files with their default system applications.
-  - **Copy & Paste**: Seamless clipboard integration.
-  - **Rename**: Easy file renaming via context menu.
-  - **Delete**: Safe deletion with confirmation dialogs.
 - **Visual Feedback**: Correct file icons based on MIME types.
 
 ## Prerequisites
@@ -52,11 +46,6 @@ Once built, you can run the file manager directly from the build directory:
 ```bash
 ./aetherfm
 ```
-
-### Controls
-*   **Double-Click**: Open directory / Launch file.
-*   **Right-Click**: Open context menu (New Folder, New File, Copy, Paste, Rename, Delete).
-*   **Toolbar**: Use the "Up" arrow to go to the parent directory.
 
 ## Contributing
 
