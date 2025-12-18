@@ -21,7 +21,7 @@ To build AetherFM, you need a C compiler and the GTK+ 3.0 development libraries.
 
 1.  **Clone the repository** (if you haven't already):
     ```bash
-    git clone https://github.com/yourusername/aetherfm.git
+    git clone https://github.com/Serosh-commits/aetherfm.git
     cd aetherfm
     ```
 
