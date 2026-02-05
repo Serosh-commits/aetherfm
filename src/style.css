@@ -1,0 +1,107 @@
+window {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+headerbar {
+    background-color: #11111b;
+    border-bottom: 1px solid #313244;
+    min-height: 48px;
+    padding: 0 6px;
+}
+
+headerbar button {
+    background-color: #313244;
+    color: #cdd6f4;
+    border-radius: 6px;
+    margin: 2px;
+    padding: 4px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+headerbar button:hover {
+    background-color: #45475a;
+    box-shadow: 0 0 8px rgba(137, 180, 250, 0.4);
+}
+
+entry {
+    background-color: #181825;
+    color: #cdd6f4;
+    border: 1px solid #313244;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+entry:focus {
+    border-color: #89b4fa;
+    box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.2);
+}
+
+treeview {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+    border: none;
+}
+
+treeview:selected {
+    background-color: #313244;
+    color: #89b4fa;
+}
+
+treeview header button {
+    background-color: #11111b;
+    color: #bac2de;
+    border: none;
+    padding: 8px;
+}
+
+iconview {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+iconview:selected {
+    background-color: #313244;
+    color: #89b4fa;
+    border-radius: 4px;
+}
+
+placessidebar {
+    background-color: #181825;
+    border-right: 1px solid #313244;
+}
+
+placessidebar row {
+    padding: 8px;
+}
+
+placessidebar row:selected {
+    background-color: #313244;
+    color: #89b4fa;
+    border-left: 3px solid #89b4fa;
+}
+
+scrollbar slider {
+    background-color: #45475a;
+    min-width: 8px;
+    border-radius: 4px;
+}
+
+menu {
+    background-color: #1e1e2e;
+    border: 1px solid #313244;
+}
+
+menuitem {
+    padding: 6px;
+}
+
+menuitem:hover {
+    background-color: #313244;
+}
+
+dialog {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
