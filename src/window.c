@@ -63,10 +63,20 @@ static void open_path(AetherWindow *app, const gchar *path) {
     if (g_file_test(path, G_FILE_TEST_IS_DIR)) {
         g_free(app->current_path);
         app->current_path = g_strdup(path);
-        gtk_entry_set_text(GTK_ENTRY(app->path_entry), app->current_path);
+        gchar *display_path = g_filename_display_name(path);
+        gtk_entry_set_text(GTK_ENTRY(app->path_entry), display_path);
+        g_free(display_path);
         refresh_content(app);
     } else {
-        gtk_show_uri_on_window(GTK_WINDOW(app->window), "file://", GDK_CURRENT_TIME, NULL);
+        gchar *uri = g_filename_to_uri(path, NULL, NULL);
+        if (uri) {
+            GError *error = NULL;
+            if (!gtk_show_uri_on_window(GTK_WINDOW(app->window), uri, GDK_CURRENT_TIME, &error)) {
+                show_error(app, error->message);
+                g_error_free(error);
+            }
+            g_free(uri);
+        }
     }
     g_object_unref(file);
 }
@@ -154,11 +164,7 @@ static void refresh_content(AetherWindow *app) {
         gchar *full_path = g_build_filename(app->current_path, name, NULL);
         gchar *content_type = g_content_type_guess(full_path, NULL, 0, NULL);
         GIcon *icon = g_content_type_get_icon(content_type);
-        gchar *display_name = g_filename_to_utf8(name, -1, NULL, NULL, NULL);
-
-        if (!display_name) {
-            display_name = g_strescape(name, "");
-        }
+        gchar *display_name = g_filename_display_name(name);
 
         gtk_list_store_append(app->model, &iter);
         gtk_list_store_set(app->model, &iter,
@@ -176,6 +182,7 @@ static void refresh_content(AetherWindow *app) {
 
 static void setup_sidebar(AetherWindow *app) {
     app->sidebar = gtk_places_sidebar_new();
+    gtk_style_context_add_class(gtk_widget_get_style_context(app->sidebar), "aether-sidebar");
     gtk_places_sidebar_set_open_flags(GTK_PLACES_SIDEBAR(app->sidebar), GTK_PLACES_OPEN_NORMAL);
     g_signal_connect(app->sidebar, "open-location", G_CALLBACK(on_sidebar_open_location), app);
 }
@@ -186,6 +193,7 @@ static void setup_list_view(AetherWindow *app) {
     GtkTreeViewColumn *column;
 
     app->tree_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(app->model));
+    gtk_style_context_add_class(gtk_widget_get_style_context(app->tree_view), "aether-list");
     
     column = gtk_tree_view_column_new();
     renderer_pixbuf = gtk_cell_renderer_pixbuf_new();
@@ -199,6 +207,7 @@ static void setup_list_view(AetherWindow *app) {
     gtk_tree_view_append_column(GTK_TREE_VIEW(app->tree_view), column);
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(app->tree_view), FALSE);
     
+    gtk_tree_view_set_activate_on_single_click(GTK_TREE_VIEW(app->tree_view), TRUE);
     g_signal_connect(app->tree_view, "row-activated", G_CALLBACK(on_list_row_activated), app);
 }
 
@@ -207,6 +216,7 @@ static void setup_grid_view(AetherWindow *app) {
     GtkCellRenderer *renderer_text;
 
     app->icon_view = gtk_icon_view_new_with_model(GTK_TREE_MODEL(app->model));
+    gtk_style_context_add_class(gtk_widget_get_style_context(app->icon_view), "aether-grid");
     gtk_icon_view_set_selection_mode(GTK_ICON_VIEW(app->icon_view), GTK_SELECTION_SINGLE);
     gtk_icon_view_set_item_width(GTK_ICON_VIEW(app->icon_view), 80);
     gtk_icon_view_set_column_spacing(GTK_ICON_VIEW(app->icon_view), 20);
@@ -214,7 +224,7 @@ static void setup_grid_view(AetherWindow *app) {
     gtk_icon_view_set_margin(GTK_ICON_VIEW(app->icon_view), 20);
 
     renderer_pixbuf = gtk_cell_renderer_pixbuf_new();
-    g_object_set(renderer_pixbuf, "stock-size", GTK_ICON_SIZE_DIALOG, NULL);
+    g_object_set(renderer_pixbuf, "icon-size", GTK_ICON_SIZE_DIALOG, NULL);
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(app->icon_view), renderer_pixbuf, FALSE);
     gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(app->icon_view), renderer_pixbuf, "gicon", COLUMN_ICON);
 
@@ -227,7 +237,18 @@ static void setup_grid_view(AetherWindow *app) {
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(app->icon_view), renderer_text, TRUE);
     gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(app->icon_view), renderer_text, "text", COLUMN_NAME);
 
+    gtk_icon_view_set_activate_on_single_click(GTK_ICON_VIEW(app->icon_view), TRUE);
     g_signal_connect(app->icon_view, "item-activated", G_CALLBACK(on_grid_item_activated), app);
+}
+
+static void on_path_entry_activated(GtkEntry *entry, gpointer user_data) {
+    AetherWindow *app = (AetherWindow *)user_data;
+    const gchar *utf8_path = gtk_entry_get_text(entry);
+    gchar *path = g_filename_from_utf8(utf8_path, -1, NULL, NULL, NULL);
+    if (path) {
+        open_path(app, path);
+        g_free(path);
+    }
 }
 
 static GtkWidget* create_header_bar(AetherWindow *app) {
@@ -242,6 +263,8 @@ static GtkWidget* create_header_bar(AetherWindow *app) {
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header), up_btn);
 
     app->path_entry = gtk_entry_new();
+    gtk_style_context_add_class(gtk_widget_get_style_context(app->path_entry), "cyber-entry");
+    g_signal_connect(app->path_entry, "activate", G_CALLBACK(on_path_entry_activated), app);
     gtk_header_bar_set_custom_title(GTK_HEADER_BAR(header), app->path_entry);
 
     hidden_btn = gtk_toggle_button_new();
